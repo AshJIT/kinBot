@@ -31,10 +31,6 @@ function processCommand(receivedMessage) {
   let arguments = splitCommand.slice(1); // All other words are arguments/parameters/options for the command
   let argumentsString = arguments.join(" ");
 
-  // console.log("Command received: " + primaryCommand);
-  // console.log("Arguments: " + arguments); // There may not be any arguments
-  // console.log("Arguments String: " + argumentsString); // There may not be any arguments
-
   if (primaryCommand == "kinbothelp") {
     help.getHelp(arguments, receivedMessage);
   } else if (primaryCommand === "kin") {
@@ -59,6 +55,8 @@ function processCommand(receivedMessage) {
     staff.giveItem(argumentsString, receivedMessage);
   } else if (primaryCommand === "takeitem") {
     staff.takeItem(argumentsString, receivedMessage);
+  } else if (primaryCommand === "givepebblesmulti") {
+    staff.givePebblesMulti(argumentsString, receivedMessage);
   }
 }
 

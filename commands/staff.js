@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { isInt } = require("../helpers/helpers");
 const helper = require("../helpers/helpers");
 
 module.exports = {
@@ -251,4 +252,50 @@ module.exports = {
             );
         }
     },
+
+    givePebblesMulti: function (arguments, receivedMessage) {
+        if (receivedMessage.member.roles.some(role => role.name === "Pebble Granting")) { 
+            arguments = arguments.split("+").map(argument => argument.trim());
+            arguments2 = arguments[1].split(":");
+            let users = arguments[0].split(",").map(argument => argument.trim());
+            let pebbles = arguments2[0].trim();
+            let reason = arguments2[1].trim();
+
+            if (typeof users === "undefined" && typeof pebbles === "undefined" && typeof reason === "undefined") {
+                receivedMessage.channel.send(
+                    "Was that the right command? Try /givepebblesmulti name, name, name : pebbles"
+                );
+
+                return;
+            }
+
+            if (!isInt(pebbles)) {
+                receivedMessage.channel.send(
+                    "Are you sure \"" + pebbles + "\" is a full number?"
+                );
+
+                return;
+            }
+
+            axios
+                .get(`${helper.getForumApiString()}member/${users}/increaseMulti/${pebbles}`)
+                .then(response => {
+                    if (response.status === 200) {
+                        receivedMessage.channel.send(users.join(", ") + " were granted " + pebbles + " pebbles for: " + reason);
+                    } else {                        
+                        receivedMessage.channel.send(`Something went wrong, get Dova to check the logs.`);
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                    receivedMessage.channel.send(
+                        `I couldn't find one of those users, would you like to try again?`
+                    );
+                });
+        } else {
+            receivedMessage.channel.send(
+                "I don't think you have permission to use that command..."
+            );
+        }
+    }
 }
