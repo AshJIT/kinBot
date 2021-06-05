@@ -15,9 +15,9 @@ module.exports = {
                             res.data.kin_count +
                             " kin and has coloured " +
                             res.data.coloured_kin_count +
-                            "! \nCheck out their kindex profile here: " + helper.getOlUri() + "gaians/kin/" +
+                            "! \nCheck out their kindex profile here: " + helper.getOlUri() + "owner/kin/" +
                             res.data.slug +
-                            "\nOr the kin they've colored here: " + helper.getOlUri() + "colourists/kin/" +
+                            "\nOr the kin they've colored here: " + helper.getOlUri() + "colorist/kin/" +
                             res.data.slug
                         );
                     } else {
@@ -25,7 +25,7 @@ module.exports = {
                             res.data.name +
                             " has " +
                             res.data.kin_count +
-                            " kin on the kindex! \nCheck out their kindex profile here: " + helper.getOlUri() + "gaians/kin/" +
+                            " kin on the kindex! \nCheck out their kindex profile here: " + helper.getOlUri() + "owner/kin/" +
                             res.data.slug
                         );
                     }
