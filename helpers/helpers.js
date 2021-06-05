@@ -28,6 +28,6 @@ module.exports = {
     },
 
     getOlUri: function () {
-        return "http://matope-swamp.com/ol/";
+        return "http://ol.matope-swamp.com";
     }
 }
