@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const client = new Discord.Client();
+const client = new Discord.Client({intents: ['GUILD_MESSAGES']});
 const axios = require("axios");
 
 const help = require("./commands/help");
