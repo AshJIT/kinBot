@@ -25,7 +25,7 @@ module.exports = {
                             res.data.name +
                             " has " +
                             res.data.kin_count +
-                            " kin on the kindex! \nCheck out their kindex profile here: " + helper.getOlUri() + "owner/kin/" +
+                            " kin on the kindex! \nCheck out their kindex profile here: " + helper.getOlUri() + "owner/" +
                             res.data.slug
                         );
                     }
