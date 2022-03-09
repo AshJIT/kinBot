@@ -1,63 +1,94 @@
-const Discord = require("discord.js");
-const client = new Discord.Client({intents: ['GUILD_MESSAGES']});
-const axios = require("axios");
+const fs = require('fs');
+const { Client, Collection, Intents } = require('discord.js');
+const dotenv = require('dotenv');
 
-const help = require("./commands/help");
-const ship = require("./commands/ship");
-const kin = require("./commands/kin");
-const user = require("./commands/user");
-const staff = require("./commands/staff");
+dotenv.config();
 
-require("dotenv").config();
+const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
-client.on("ready", () => {
-  console.log(`Logged in as ${client.user.tag}!`);
-});
+client.commands = new Collection();
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+const adminFiles = fs.readdirSync('./commands/admin').filter(file => file.endsWith('.js'));
 
-client.on("message", msg => {
-  if (msg.author === client.user) {
-    return;
-  }
-
-  if (msg.content.startsWith("/")) {
-    processCommand(msg);
-  }
-});
-
-function processCommand(receivedMessage) {
-  let fullCommand = receivedMessage.content.substr(1); // Remove the leading exclamation mark
-  let splitCommand = fullCommand.split(" "); // Split the message up in to pieces for each space
-  let primaryCommand = splitCommand[0]; // The first word directly after the exclamation is the command
-  let arguments = splitCommand.slice(1); // All other words are arguments/parameters/options for the command
-  let argumentsString = arguments.join(" ");
-
-  if (primaryCommand == "kinbothelp") {
-    help.getHelp(arguments, receivedMessage);
-  } else if (primaryCommand === "kin") {
-    kin.getKin(argumentsString, receivedMessage);
-  } else if (primaryCommand === "kinslug") {
-    kin.getKinBySlug(argumentsString, receivedMessage);
-  } else if (primaryCommand === "user") {
-    user.getUser(argumentsString, receivedMessage);
-  } else if (primaryCommand === "ship") {
-    ship.getShip(argumentsString, receivedMessage);
-  } else if (primaryCommand === "shiprandom") {
-    ship.getMysteryShip(argumentsString, receivedMessage);
-  } else if (primaryCommand === "breed") {
-    staff.getBreeding(argumentsString, receivedMessage);
-  } else if (primaryCommand === "pebbles") {
-    staff.getPebbles(argumentsString, receivedMessage);
-  } else if (primaryCommand === "givepebbles") {
-    staff.givePebbles(argumentsString, receivedMessage);
-  } else if (primaryCommand === "takepebbles") {
-    staff.takePebbles(argumentsString, receivedMessage);
-  } else if (primaryCommand === "giveitem") {
-    staff.giveItem(argumentsString, receivedMessage);
-  } else if (primaryCommand === "takeitem") {
-    staff.takeItem(argumentsString, receivedMessage);
-  } else if (primaryCommand === "givepebblesmulti") {
-    staff.givePebblesMulti(argumentsString, receivedMessage);
-  }
+for (const file of commandFiles) {
+	const command = require(`./commands/${file}`);
+	// Set a new item in the Collection
+	// With the key as the command name and the value as the exported module
+	client.commands.set(command.data.name, command);
 }
 
-client.login(process.env.BOT_TOKEN);
+for (const adminFile of adminFiles) {
+	const adminCommand = require(`./commands/admin/${adminFile}`);
+	// Set a new item in the Collection
+	// With the key as the command name and the value as the exported module
+	client.commands.set(adminCommand.data.name, adminCommand);
+}
+
+client.once('ready', async () => {
+	console.log('A wild KinBot has appeared!');
+
+	const fullPermissions = [
+		{
+			id: '943880216151982137',
+			permissions: [{
+				id: '943687025519902771',
+				type: 'ROLE',
+				permission: true,
+			}],
+		},
+		{
+			id: '943880216151982138',
+			permissions: [{
+				id: '943687025519902771',
+				type: 'ROLE',
+				permission: true,
+			}],
+		},
+		{
+			id: '943880216151982139',
+			permissions: [{
+				id: '943687025519902771',
+				type: 'ROLE',
+				permission: true,
+			}],
+		},
+		{
+			id: '943880216214904832',
+			permissions: [{
+				id: '943687025519902771',
+				type: 'ROLE',
+				permission: true,
+			}],
+		},
+		{
+			id: '943880216214904833',
+			permissions: [{
+				id: '943687025519902771',
+				type: 'ROLE',
+				permission: true,
+			}],
+		},
+	];
+
+	const res = await client.guilds.cache.get(process.env.GUILD).commands.permissions.set({ fullPermissions });
+});
+
+client.on('interactionCreate', async interaction => {
+	if (!interaction.isCommand()) return;
+
+	const command = client.commands.get(interaction.commandName);
+
+	if (!command) return;
+
+	try {
+		await command.execute(interaction);
+	} catch (error) {
+		console.error(error);
+		return interaction.reply({ 
+			content: 'There was an error while executing this command!', 
+			ephemeral: true 
+		});
+	}
+});
+
+client.login(process.env.token);

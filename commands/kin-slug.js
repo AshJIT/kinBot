@@ -4,11 +4,11 @@ const helper = require("../helpers/helpers");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('kin')
-		.setDescription('Showcases desired kin')
+		.setName('kin-slug')
+		.setDescription('Showcases desired kin with url suffix on ol page')
 		.addStringOption(option => 
 			option.setName('name')
-				.setDescription('Enter the kin name')
+				.setDescription('Enter the kin slug')
 				.setRequired(true)
 		),
 
@@ -16,7 +16,7 @@ module.exports = {
 		const name = interaction.options.getString('name');
 
 		try {
-			const res = await axios.get(`${helper.getOlApiString()}kin/name/${name}`)
+			const res = await axios.get(`${helper.getOlApiString()}kin/slug/${name}`)
 
 			if (res.status === 200) {
 				await interaction.reply("Are you looking for " + res.data.name + "?\n" + 
