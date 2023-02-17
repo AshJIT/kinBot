@@ -26,51 +26,6 @@ for (const adminFile of adminFiles) {
 
 client.once('ready', async () => {
 	console.log('A wild KinBot has appeared!');
-
-	const fullPermissions = [
-		{
-			id: '943880216151982137',
-			permissions: [{
-				id: '943687025519902771',
-				type: 'ROLE',
-				permission: true,
-			}],
-		},
-		{
-			id: '943880216151982138',
-			permissions: [{
-				id: '943687025519902771',
-				type: 'ROLE',
-				permission: true,
-			}],
-		},
-		{
-			id: '943880216151982139',
-			permissions: [{
-				id: '943687025519902771',
-				type: 'ROLE',
-				permission: true,
-			}],
-		},
-		{
-			id: '943880216214904832',
-			permissions: [{
-				id: '943687025519902771',
-				type: 'ROLE',
-				permission: true,
-			}],
-		},
-		{
-			id: '943880216214904833',
-			permissions: [{
-				id: '943687025519902771',
-				type: 'ROLE',
-				permission: true,
-			}],
-		},
-	];
-
-	const res = await client.guilds.cache.get(process.env.GUILD).commands.permissions.set({ fullPermissions });
 });
 
 client.on('interactionCreate', async interaction => {

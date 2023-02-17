@@ -19,7 +19,7 @@ module.exports = {
 			const res = await axios.get(`${helper.getForumApiString()}member/${user}`)
 
 			if (res.status === 200) {
-				await interaction.reply(res.data.member_name + " has " + res.data.money + " pebbles.");
+				await interaction.reply(res.data.username + " has " + res.data.user_points + " pebbles.");
 			} else {
 				await interaction.reply("Something exploded! Try again?");
 			}
