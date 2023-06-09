@@ -29,7 +29,10 @@ module.exports = {
 		const reason = interaction.options.getString('reason');
 
 		try {
-			const res = await axios.get(`${helper.getForumApiString()}member/${user}/giveItem/${item}`);
+			const res = await axios.post(`${helper.getForumApiString()}member/giveItem`, {
+				item: item,
+				username: user,
+			});
 
 			if (res.status === 200) {
 				await interaction.reply(`**${item}** given to **${user}** for: ${reason}`);
